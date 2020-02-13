@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {View, Text,ScrollView} from 'react-native'
 import PlayerTrophies from '../components/PlayerTrophies'
+import { Avatar } from 'react-native-elements'
 const axios = require('axios');
 
 class PlayerInfo extends Component {
@@ -63,20 +64,46 @@ class PlayerInfo extends Component {
     render() {
       const {statistic } = this.state
         const  item  = this.props.navigation.getParam('item');
+        const  logo  = this.props.navigation.getParam('logo');
         return (
             <View style={{flex: 1}}>
-                <ScrollView style={{flex : 1}}>
-                  <Text>PlayerInfo</Text>
-                  <Text>{item.player_name} </Text>
-                  <Text>{item.position} </Text>
-                  <Text>{item.birth_date} </Text>
-                  <Text>{item.nationality} </Text>
-                  <Text>{item.height} </Text>
-                  <Text>{item.weight} </Text>
+                <ScrollView style={{flex : 1, marginHorizontal : 30}}>
+                  <View style={{flexDirection : 'row',margin : 5, alignItems : 'center'}}>
+                    <Avatar
+                      rounded
+                      source={{uri : logo}}
+                      size ={50}
+                      containerStyle={{marginRight : 5}}
+                      reszieMode = 'contain'
+                    />
+                    <View>
+                      <Text>{item.player_name} </Text>
+                        <View style={{flexDirection : 'row'}}>
+                          <Text>{item.nationality} </Text>
+                          <Text>{item.birth_date} </Text>
+                        </View>
+                        <View style={{flexDirection : 'row'}}>
+                          <Text>{item.position} </Text>
+                          <Text>{item.height} </Text>
+                          <Text>{item.weight} </Text>
+                        </View>
+                    </View>
+                  </View>
                   {
                     this.state.statistic ?
-                    <View>
-                      <Text>{JSON.stringify(statistic)}</Text>
+                    <View style={{margin : 5}}>
+                      <Text>2019-2020시즌 기록</Text>
+
+                      <Text>경기수 : {statistic.api.players[0].games.appearences}</Text>
+                      <Text>슈팅 : {statistic.api.players[0].shots.total}</Text>
+                      <Text>유효 슈팅 : {statistic.api.players[0].shots.on}</Text>
+                      <Text>골 : {statistic.api.players[0].goals.total}</Text>
+                      <Text>도움 : {statistic.api.players[0].goals.assists}</Text>
+                      <Text>패스 횟수 : {statistic.api.players[0].passes.total}</Text>
+                      <Text>키 패스 : {statistic.api.players[0].passes.key}</Text>
+                      <Text>패스 정확도 : {statistic.api.players[0].passes.accuracy}%</Text>
+                      <Text>경고 : {statistic.api.players[0].cards.yellow}</Text>
+                      <Text>퇴장 : {statistic.api.players[0].cards.red}</Text>
                     </View>
                     : null
                   }

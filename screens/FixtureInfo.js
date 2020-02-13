@@ -3,13 +3,21 @@ import {View, Text} from 'react-native'
 import axios from 'axios'
 import Fixture from '../components/Fixture'
 import Prediction from '../components/Prediction'
+import {Header } from 'react-native-elements'
+import { AntDesign } from '@expo/vector-icons'
+import { favFix, favFixDelete } from '../firebase'
+import * as firebase from 'firebase'
 
 class FixtureInfo extends Component {
+    static navigationOptions = {
+        header : null
+      }
     constructor(props) {
         super(props)
         this.state = {
             fixture: null,
-            prediction : null
+            prediction : null,
+            check : false
         }
     }
 
@@ -30,7 +38,18 @@ class FixtureInfo extends Component {
             this.setState({prediction : null})
             this.getFixtureInfo(id);
         }
+        const uid = firebase.auth().currentUser.uid
+        this.setState({ uid : uid})
+        this.favFixCheck(uid, id)
+
     }
+
+    favFixCheck(uid, fixid){
+        firebase.database().ref('users/'+ uid +'/favFix').orderByChild('fixtures/fixture_id').equalTo(fixid).once('value').then((snapshot) => {
+          this.setState({ check : snapshot.exists()})
+        })
+      }
+    
 
     getFixturePrediction(id){
         axios({
@@ -73,12 +92,42 @@ class FixtureInfo extends Component {
                 console.log(error)
             })
         }
+    
+        scrapFix(){
+            this.setState({check : true})
+            favFix(this.state.uid,this.props.navigation.getParam('fixture'))
+        }
+
+        deleteFix(){
+            this.setState({check : false})
+            favFixDelete(this.state.uid,this.props.navigation.getParam('id'))
+        }
+
+
 
     render() {
         return (
             <View style={{
                     flex: 1
                 }}>
+                <Header
+                    centerComponent={{ text : '경기 정보' , style : {color : 'white', fontSize : 18, fontWeight : 'bold'}}}
+                    containerStyle={{marginBottom : 0, backgroundColor : '#381AED'}}
+                    rightComponent = {
+                        this.state.check ?
+                        <AntDesign
+                          name ="star"
+                          size = {20}
+                          onPress={()=> this.deleteFix()}
+                          color="yellow"
+                        /> : 
+                        <AntDesign
+                          name ="staro"
+                          onPress={()=> this.scrapFix()}
+                          size = {20}
+                        />
+                      }
+                    />
                 {
                     this.state.fixture
                         ? <Fixture fixture={this.state.fixture.api.fixtures}/>

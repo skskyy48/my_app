@@ -68,13 +68,14 @@ const Prediction = ({predictions,fixture}) => {
             </View>
             <View
                 style={{
-                    flex: 1,
+                    flex: 3,
                     justifyContent: 'center'
                 }}>
                 <Text>날짜 : {fixture.event_date}</Text>
                 <Text>승률</Text>
-                <Text> 홈 승리 : {prediction.winning_percent.home} 무 : {prediction.winning_percent.draws} 원정 승리 : {prediction.winning_percent.away}</Text>
-                <Text>최근 5 경기 상대 전적</Text>
+                <Text>승부 예측</Text>
+                <Text>홈 승리 : {prediction.winning_percent.home} 무승부 : {prediction.winning_percent.draws} 원정 승리 : {prediction.winning_percent.away}</Text>
+                <Text>최근 상대 전적</Text>
                 <Text>{prediction.teams.home.team_name} : {prediction.teams.home.last_h2h.played.total}경기  {prediction.teams.home.last_h2h.wins.total}승 {prediction.teams.home.last_h2h.draws.total}무 {prediction.teams.home.last_h2h.loses.total}패</Text>
                 <Text>{prediction.teams.away.team_name} : {prediction.teams.away.last_h2h.played.total}경기  {prediction.teams.away.last_h2h.wins.total}승 {prediction.teams.away.last_h2h.draws.total}무 {prediction.teams.away.last_h2h.loses.total}패</Text>
                 </View>

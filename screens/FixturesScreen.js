@@ -37,9 +37,9 @@ class FixturesScreen extends Component {
         this.getData(524, dateNow)
     }
 
-    componentWillReceiveProps(nextProps){
-        if(this.props.num !== nextProps.num){
-            this.onLeagueChange(nextProps.num)
+    componentDidUpdate(prevProps){
+        if(prevProps.num !== this.props.num){
+            this.onLeagueChange(this.props.num)
         }
     }
 
@@ -78,20 +78,22 @@ class FixturesScreen extends Component {
         return (
         <View style={styles.container}>
           <Header
-            centerComponent={{ text : this.props.league[this.props.num].name , style : {fontSize : 18, fontWeight : 'bold'}}}
+            centerComponent={{ text : this.props.league[this.props.num].name , style : {fontSize : 18, fontWeight : 'bold', color : 'white'}}}
             rightComponent={<AntDesign name="right" size={18} onPress={() => this.props.changeLeague(1)}/>}
             leftComponent={<AntDesign name="left" size={18} onPress={() => this.props.changeLeague(-1)}/>}
+            containerStyle={{marginBottom : 0, backgroundColor : '#381AED'}}
             />
             <View style={{
                     flexDirection: 'row',
                     justifyContent : 'center',
-                    alignItems : 'center'
+                    alignContent : 'space-around'
                 }}>
-                {this.state.selected ?<Text>{this.state.selected}</Text> : null}
+                {this.state.selected ?<Text style={{fontSize : 18, fontWeight : 'bold'}}>{this.state.selected}</Text> : null}
                 <AntDesign
                     name='calendar'
                     onPress={() => this.setState({ calVisible : !this.state.calVisible})}
-                    size = {28}
+                    size = {24}
+                    style = {{alignContent : 'flex-end'}}
                 />
                 </View>
                     {

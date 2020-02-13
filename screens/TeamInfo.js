@@ -1,38 +1,50 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, Image } from 'react-native'
 import axios from 'axios'
-import Team_Info from '../components/Team_Info'
 import Fixtures from '../components/Fixtures'
 import { TabView, TabBar } from 'react-native-tab-view'
 import Players from '../components/Players'
 import { Tile, Header } from 'react-native-elements'
+import Team_Info from '../components/Team_Info'
+import { favTeam, favTeamDelete } from '../firebase'
+import { AntDesign } from '@expo/vector-icons'
+import * as firebase from 'firebase'
 
 const initialLayout = { width : Dimensions.get('window').width}
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 class TeamInfo extends Component {
-    static navigationOptions = ({navigation}) => {
-      return {
-        title : navigation.getParam('title')
-      }
-    }
+  static navigationOptions = {
+    header : null
+  }
+
     constructor(props){
         super(props)
         this.state = {
             team : null,
             fixtures : null,
             players : null,
-            index : 0
+            index : 0,
+            check : false
         }
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
         const id = this.props.navigation.getParam('id')
         const league = this.props.navigation.getParam('league');
-        await this.getTeamData(id)
-        await this.getTeamFixtures(id,league)
-        await this.getTeamPlayer(id)
+        const uid = firebase.auth().currentUser.uid
+        this.favTeamCheck(uid, id)
+        this.setState({uid : uid, id : id})
+        this.getTeamData(id)
+        this.getTeamFixtures(id,league)
+        this.getTeamPlayer(id)
+    }
+
+    favTeamCheck(uid, teamid){
+      firebase.database().ref('users/'+ uid +'/favTeam').orderByChild('team_id').equalTo(teamid).once('value').then((snapshot) => {
+        this.setState({ check : snapshot.exists()})
+      })
     }
 
 
@@ -99,8 +111,19 @@ class TeamInfo extends Component {
         this.setState({index : index})
     };
 
+    scrapTeam = () => {
+      this.setState({check : true})
+      favTeam(this.state.uid, this.state.team, this.props.navigation.getParam('league'))
+    }
+
+    deleteTeam = () => {
+      this.setState({check : false})
+      favTeamDelete(this.state.uid, this.state.id)
+    }
+
 
      routes = [
+        {key : 'team', title : '팀 정보'},
         { key: 'fixtures', title: '경기 일정' },
         { key: 'squad', title: '선수단' },
     ];
@@ -116,6 +139,24 @@ class TeamInfo extends Component {
     render() {
         return (
             <View style={{flex : 1}}>
+              <Header
+                centerComponent ={{ text : this.props.navigation.getParam('title'), style : {color : 'white', fontSize : 18, fontWeight : 'bold'} }}
+                containerStyle={{marginBottom : 0, backgroundColor : '#381AED'}}
+                rightComponent = {
+                this.state.check ?
+                <AntDesign
+                  name ="star"
+                  onPress={() => this.deleteTeam()}
+                  size = {20}
+                  color="yellow"
+                /> : 
+                <AntDesign
+                  name ="staro"
+                  onPress={()=> this.scrapTeam()}
+                  size = {20}
+                />
+              }
+              />
                 <View style = {{flex : 1}}>
                 {this.state.team ? 
                     <Image
@@ -131,6 +172,12 @@ class TeamInfo extends Component {
                 navigationState={{ index : this.state.index, routes : this.routes }}
                 renderScene={({ route }) => {
                     switch (route.key) {
+                        case 'team' : 
+                        return <View style={{flex : 1}}>
+                        {this.state.team ? 
+                        <Team_Info team={this.state.team.api.teams[0]}/>
+                        : <Text>Loading</Text>}
+                        </View>
                         case 'fixtures' : 
                         return <View style={{flex : 1}}>
                         {this.state.fixtures ?
@@ -139,7 +186,7 @@ class TeamInfo extends Component {
                     </View>
                         case 'squad' : 
                         return <View style={{flex : 1}}>
-                            {this.state.players ? <Players players={this.state.players.api.players} navigation={this.props.navigation}/>
+                            {this.state.players && this.state.team ? <Players players={this.state.players.api.players} logo={this.state.team.api.teams[0].logo} navigation={this.props.navigation}/>
                             : <Text>Loading</Text>}
                         </View>
                     }

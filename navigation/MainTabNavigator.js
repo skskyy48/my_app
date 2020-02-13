@@ -7,10 +7,15 @@ import FixturesScreen from '../screens/FixturesScreen';
 import FixtureInfo from '../screens/FixtureInfo'
 
 import ProfileScreen from '../screens/ProfileScreen';
+import FavTeam from '../screens/FavTeam'
+import FavFixture from '../screens/FavFixture'
+
 import TeamInfo from '../screens/TeamInfo'
 import PlayerInfo from '../screens/PlayerInfo'
 
 import LeagueScreen from '../screens/LeagueScreen'
+
+
 
 
 const config = Platform.select({
@@ -57,6 +62,8 @@ LeagueStack.path = '';
 const ProfileStack = createStackNavigator(
   {
     Profile : ProfileScreen,
+    FavTeam : FavTeam,
+    FavFixture : FavFixture
   },
   config
 );

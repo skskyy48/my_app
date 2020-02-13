@@ -3,7 +3,7 @@
     "name": "my_app",
     "slug": "my_app",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
@@ -35,7 +35,7 @@
         "storageBucket": "soccerya-31461.appspot.com",
         "messagingSenderId": "1009831711257",
         "appId": "1:1009831711257:web:41871c1d5d6ae3ec"
-  },
+      },
       "facebook": {
         "appId": "1077913022392519"
       }

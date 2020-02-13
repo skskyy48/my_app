@@ -11,33 +11,58 @@ const firebaseConfig = {
     appId: "1:1009831711257:web:41871c1d5d6ae3ec"
 }
 
-firebase.initializeApp(firebaseConfig)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+}
 
 export async function signInWithFacebook() {
-    const appId = "1077913022392519";
-    const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        appId,
-        { permissions: ['public_profile'] },
-      );
+  const appId = "1077913022392519";
+  const permissions = ['public_profile', 'email'];  // Permissions required, consult Facebook docs
   
-      if (type === 'success' && token) {
-        // Build Firebase credential with the Facebook access token.
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-  
-        // Sign in with credential from the Facebook user.
-        await firebase
-          .auth()
-          .signInWithCredential(credential);
-      }
-  }
+  await Facebook.initializeAsync(
+    '1077913022392519',
+ );
 
-export function articleScrap(article){
-  const uid = firebase.auth().currentUser.uid
+ const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+   { permissions: ['public_profile'] }
+ );
 
-  firebase.database().ref('users/' + uid).push({
-    article
-  })
+ if (type === 'success') {
+   // Build Firebase credential with the Facebook access token.
+   const credential = firebase.auth.FacebookAuthProvider.credential(token);
 
+   // Sign in with credential from the Facebook user.
+   firebase.auth().signInWithCredential(credential).catch((error) => {
+     // Handle Errors here.
+   });
+ }
 }
+
+export async function favTeam(uid, team, league){
+  const teami = team.api.teams[0]
+  firebase.database().ref('users/' + uid + '/favTeam/' + teami.team_id).set({
+    team_name : teami.name,
+    team_id : teami.team_id,
+    logo : teami.logo,
+    league : league
+    
+  })
+}
+
+export async function favTeamDelete(uid,teamid){
+  firebase.database().ref('users/'+ uid + '/favTeam/'+teamid).remove()
+}
+
+export async function favFix(uid, fixtures){
+  firebase.database().ref('users/'+ uid + '/favFix/'+ fixtures.fixture_id).set({
+    fixtures
+  })
+}
+
+export async function favFixDelete(uid,fixid){
+  firebase.database().ref('users/'+uid +'/favFix/'+ fixid).remove()
+}
+
+
 
 export default firebase

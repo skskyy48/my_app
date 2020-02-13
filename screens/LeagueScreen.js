@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, Button, Dimensions} from 'react-native'
 import LeagueTable from '../components/LeagueTable'
 const axios = require('axios');
-import {TabView} from 'react-native-tab-view'
+import {TabView, TabBar} from 'react-native-tab-view'
 import TopScorer from '../components/TopScorer'
 import {connect} from 'react-redux'
 import ActionCreator from '../redux/actions'
@@ -31,9 +31,9 @@ class LaegueScreen extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.num !== nextProps.num) {
-            this.onLeagueChange(nextProps.num)
+    componentDidUpdate(prevProps){
+        if(prevProps.num !== this.props.num){
+            this.onLeagueChange(this.props.num)
         }
     }
 
@@ -103,6 +103,14 @@ class LaegueScreen extends Component {
         }
     ];
 
+    renderTabBar = props => (
+        <TabBar
+          {...props}
+          style = {{ backgroundColor : '#381AED', height : 40,paddingTop : 0}}
+          indicatorStyle = {{ backgroundColor : 'red'}}
+          />
+      )
+
     render() {
         return (
             <View style={{
@@ -114,7 +122,7 @@ class LaegueScreen extends Component {
                             .props
                             .league[this.props.num]
                             .name
-                    , style : {fontSize : 18, fontWeight : 'bold'}
+                    , style : {fontSize : 18, fontWeight : 'bold',color : 'white'}
                           }}
                     rightComponent={<AntDesign name = 'right' size={18} onPress = {
                         () => this
@@ -127,12 +135,15 @@ class LaegueScreen extends Component {
                             .changeLeague(-1)
                     } />
                     }
+                    containerStyle={{marginBottom : 0, backgroundColor : '#381AED'}}
                 />
                 <TabView
+                    style={{marginTop : 0}}
                     navigationState={{
                         index: this.state.index,
                         routes: this.routes
                     }}
+                    renderTabBar ={this.renderTabBar}
                     renderScene={({route}) => {
                         switch (route.key) {
                             case 'table':

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import {View, Text, FlatList,TouchableOpacity} from 'react-native'
 import {Avatar, Tile, ListItem} from 'react-native-elements'
 
-const Players = ({players,navigation}) => {
+const Players = ({players,logo,navigation}) => {
     return (
         <View style={{flex : 1}}> 
             <FlatList 
                     data = {players}
                     renderItem = {({item}) => 
                         <View style={{flex : 1}}>
-                            <TouchableOpacity onPress={()=> navigation.navigate('PlayerInfo',{id : item.player_id,item : item})}>
+                            <TouchableOpacity onPress={()=> navigation.navigate('PlayerInfo',{id : item.player_id,item : item, logo : logo})}>
                             <View style={{flex : 1}}>
                                 <ListItem
                                     key = {item.player_id}

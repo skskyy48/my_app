@@ -29,23 +29,25 @@ const Fixtures = ({fixtures, navigation}) => {
                                 <Text>경기 일시 : { item.event_date }</Text>
                                 <Text>경기 장소 : { item.venue }</Text>
                                 <View style={{ flex : 3 ,flexDirection : "row", justifyContent : 'space-between'}}>
-                                <View style = {{alignItems : "flex-start"}}>
-                                    <Text>Home</Text>
-                                    <Text>{item.homeTeam.team_name}</Text>
-                                    <Avatar 
-                                    rounded 
-                                    source={{ uri : item.homeTeam.logo}}
-                                    />
-                                </View>
-                                <View style={{alignItems : "flex-end"}}>
-                                    <Text>Away</Text>
-                                    <Text>{item.awayTeam.team_name}</Text>
-                                    <Avatar 
-                                    rounded 
-                                    source={{ uri : item.awayTeam.logo}}
-                                    />
-                                </View>
-                                <Text>{item.score.fulltime}</Text>
+                                    <View style = {{alignItems : "center",justifyContent : 'center'}}>
+                                        <Text>Home</Text>
+                                        <Text>{item.homeTeam.team_name}</Text>
+                                        <Avatar 
+                                        rounded 
+                                        source={{ uri : item.homeTeam.logo}}
+                                        />
+                                    </View>
+                                    <View style={{alignItems : 'center', justifyContent : 'center'}}>
+                                        {item.score ? <Text style={{fontSize : 18, fontWeight : 'bold'}}>{item.score.fulltime}</Text>
+                                    : null}</View>
+                                    <View style={{alignItems : "center",justifyContent : 'center'}}>
+                                        <Text>Away</Text>
+                                        <Text>{item.awayTeam.team_name}</Text>
+                                        <Avatar 
+                                        rounded 
+                                        source={{ uri : item.awayTeam.logo}}
+                                        />
+                                    </View>
                                 </View>
                                 </TouchableOpacity>
                             </View>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, FlatList} from 'react-native'
+import {View, Text, FlatList, StyleSheet} from 'react-native'
 import { ListItem } from 'react-native-elements'
 
 const PlayerTrophies = ({trophies}) => {
@@ -14,12 +14,14 @@ const PlayerTrophies = ({trophies}) => {
                                 title={item.league}
                                 subtitle = {
                                     <View style={{flexDirection : 'row'}}>
-                                        <Text>{item.season} </Text>
-                                        <Text>{item.country} </Text>
-                                        <Text>{item.place} </Text>
+                                        <Text style={styles.subtitle}>{item.season} </Text>
+                                        <Text style={styles.subtitle}>{item.country} </Text>
+                                        <Text style={styles.subtitle}>{item.place} </Text>
                                     </View>
                                 }
-                            />
+                                titleStyle = {styles.title}
+                                containerStyle ={{paddingLeft : 1,paddingTop : 3, paddingBottom : 3}}
+                     />
                         </View>
                     }
                     keyExtractor = {item => JSON.stringify(item.season + item.league)}
@@ -27,6 +29,16 @@ const PlayerTrophies = ({trophies}) => {
             </View>
         );
     }
+
+const styles = StyleSheet.create({
+    title : {
+        fontSize : 15,
+        fontWeight : 'bold'
+    },
+    subtitle : {
+        fontSize : 12
+    }
+})
  
 
  export default PlayerTrophies
